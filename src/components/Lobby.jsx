@@ -4,12 +4,39 @@
 import { useState, useEffect } from 'react';
 import { useGameState, useGameDispatch } from '../context/GameContext';
 
+const instructions = {
+    bn: {
+        title: 'গেম খেলার নিয়ম',
+        body: [
+            'এইটা একটা ২ জনের অনলাইন Bingo গেম, যেখানে আপনি আপনার বন্ধুর সাথে রিয়েল-টাইমে খেলতে পারবেন। প্রথমে একজন "Host Game" করে একটি রুম তৈরি করবে, আর অন্যজন ইনভাইট লিংকের মাধ্যমে সেই রুমে জয়েন করবে।',
+            'গেম শুরু হওয়ার আগে দুজনই নিজের মতো করে ৫×৫ গ্রিডে ১ থেকে ২৫ পর্যন্ত সংখ্যা বসাবেন। এখানে কোনো সিরিয়াল মেনে বসানোর দরকার নেই। আপনি যেভাবে চান সেভাবেই সাজাতে পারবেন। শুধু খেয়াল রাখতে হবে, একই সংখ্যা যেন একাধিকবার না থাকে। সব সেট করা হয়ে গেলে "Ready" বাটনে ক্লিক করুন। দুজনই Ready হলে Host গেম শুরু করবে।',
+            'গেম শুরু হলে, যেকোনো একজন একটি নাম্বারে ক্লিক করলে সেটি সাথে সাথে দুইজনের বোর্ডেই mark হয়ে যাবে। এভাবে খেলতে খেলতে যদি আপনার বোর্ডে কোনো সম্পূর্ণ সোজা লাইন, অর্থাৎ একটি পুরো row বা একটি পুরো column, কাটা হয়ে যায়, তাহলে "BINGO" শব্দের একটি করে অক্ষর আনলক হবে।',
+            'একটা গুরুত্বপূর্ণ বিষয়: এই গেমে diagonal বা কোণাকুণি লাইন ধরা হবে না। শুধু সোজা line, অর্থাৎ row বা column, হলেই সেটি গণনা করা হবে।',
+            'যে খেলোয়াড় সবার আগে মোট ৫টি line সম্পূর্ণ করতে পারবে, মানে পুরো "BINGO" complete করবে, সেই হবে বিজয়ী। সবকিছুই রিয়েল-টাইমে আপডেট হবে, তাই দ্রুত আর স্মার্টভাবে খেলাটাই জেতার মূল কৌশল।',
+        ],
+        toggle: 'English',
+    },
+    en: {
+        title: 'How To Play',
+        body: [
+            'This is a 2-player online Bingo game where you can play with your friend in real time. One player creates a room using "Host Game" and the other joins through the invite link.',
+            'Before the game starts, both players arrange the numbers 1 to 25 on their own 5×5 grid. You do not need to follow any serial order. You can place the numbers however you like, but each number can appear only once. When your board is ready, click "Ready". Once both players are ready, the host starts the game.',
+            'After the game starts, when a player clicks a number, it is immediately marked on both boards. As the game continues, whenever a complete straight line is marked on your board, meaning a full row or a full column, one letter of the word "BINGO" is unlocked.',
+            'Important: diagonal lines are not counted in this game. Only straight lines, meaning rows or columns, are counted.',
+            'The first player to complete 5 total lines, which means finishing the full word "BINGO", wins the game. Everything updates in real time, so quick and smart play is the key strategy.',
+        ],
+        toggle: 'বাংলা',
+    },
+};
+
 export default function Lobby({ emit }) {
     const state = useGameState();
     const dispatch = useGameDispatch();
     const [joinRoomId, setJoinRoomId] = useState('');
     const [copied, setCopied] = useState(false);
     const [waiting, setWaiting] = useState(false);
+    const [showInstructions, setShowInstructions] = useState(false);
+    const [instructionLanguage, setInstructionLanguage] = useState('bn');
 
     // Check URL for room ID (invite link)
     useEffect(() => {
@@ -66,9 +93,11 @@ export default function Lobby({ emit }) {
         const link = `${window.location.origin}?room=${state.roomId}`;
         navigator.clipboard.writeText(link).then(() => {
             setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
+            setTimeout(() => setCopied(false), 5000);
         });
     };
+
+    const currentInstructions = instructions[instructionLanguage];
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 sm:p-5">
@@ -110,11 +139,8 @@ export default function Lobby({ emit }) {
                         </div>
 
                         <button onClick={copyInviteLink} className="btn-secondary w-full flex items-center justify-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                            </svg>
-                            {copied ? '✓ Copied!' : 'Copy Invite Link'}
+                            <i className={`fi ${copied ? 'fi-br-check' : 'fi-br-copy'} ui-icon`} aria-hidden="true"></i>
+                            {copied ? 'Share this link to your friend!' : 'Copy Invite Link'}
                         </button>
                     </div>
                 )}
@@ -123,11 +149,7 @@ export default function Lobby({ emit }) {
                 {!waiting && (
                     <div className="space-y-5">
                         <button onClick={handleHostGame} className="btn-primary w-full text-base sm:text-lg py-3 sm:py-4 flex items-center justify-center gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="16"></line>
-                                <line x1="8" y1="12" x2="16" y2="12"></line>
-                            </svg>
+                            <i className="fi fi-br-plus ui-icon" aria-hidden="true"></i>
                             Host Game
                         </button>
 
@@ -148,17 +170,69 @@ export default function Lobby({ emit }) {
                                 maxLength={8}
                             />
                             <button onClick={handleJoinGame} className="btn-secondary w-full text-base sm:text-lg py-3 flex items-center justify-center gap-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                                    <polyline points="10 17 15 12 10 7"></polyline>
-                                    <line x1="15" y1="12" x2="3" y2="12"></line>
-                                </svg>
+                                <i className="fi fi-br-enter ui-icon" aria-hidden="true"></i>
                                 Join Game
                             </button>
                         </div>
+
+                        <button
+                            onClick={() => setShowInstructions(true)}
+                            className="btn-secondary w-full text-sm sm:text-base py-3 flex items-center justify-center gap-3"
+                        >
+                            <i className="fi fi-br-book-open-cover ui-icon" aria-hidden="true"></i>
+                            How To Play
+                        </button>
                     </div>
                 )}
             </div>
+
+            {showInstructions && (
+                <div className="modal-overlay" onClick={() => setShowInstructions(false)}>
+                    <div
+                        className="modal-card animate-slide-up"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <div className="flex items-start justify-between gap-3 mb-5">
+                            <div>
+                                <div className="flex items-center gap-3">
+                                    <i className="fi fi-br-book-open-cover ui-icon text-[1.4rem] sm:text-[1.6rem]" aria-hidden="true"></i>
+                                    <h2
+                                        className="text-2xl sm:text-3xl font-black text-[#25343F]"
+                                        style={{ fontFamily: 'Outfit, sans-serif' }}
+                                    >
+                                        {currentInstructions.title}
+                                    </h2>
+                                </div>
+                                <p className="text-sm text-[#4A5A65] mt-1">
+                                    Learn the rules before you start.
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setShowInstructions(false)}
+                                className="modal-close"
+                                aria-label="Close instructions"
+                            >
+                                <i className="fi fi-br-cross-small ui-icon" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        <div className="flex justify-end mb-4">
+                            <button
+                                onClick={() => setInstructionLanguage((lang) => (lang === 'bn' ? 'en' : 'bn'))}
+                                className="btn-secondary text-sm py-2 px-4"
+                            >
+                                {currentInstructions.toggle}
+                            </button>
+                        </div>
+
+                        <div className="instruction-copy">
+                            {currentInstructions.body.map((paragraph) => (
+                                <p key={paragraph}>{paragraph}</p>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

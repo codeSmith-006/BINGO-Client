@@ -2,7 +2,7 @@
  * GameOver — Winner/Loser announcement screen with celebrations.
  */
 import { useEffect, useState } from 'react';
-import { useGameState, useGameDispatch } from '../context/GameContext';
+import { useGameState } from '../context/GameContext';
 
 const CONFETTI_COLORS = ['#FF9B51', '#25343F', '#BFC9D1', '#EAEFEF'];
 
@@ -32,7 +32,6 @@ function ConfettiPiece({ index }) {
 
 export default function GameOver() {
     const state = useGameState();
-    const dispatch = useGameDispatch();
     const [showConfetti, setShowConfetti] = useState(false);
 
     const isWinner = state.winner === state.playerId;
@@ -67,7 +66,7 @@ export default function GameOver() {
                     {isWinner ? (
                         <>
                             <div className="text-7xl mb-4" style={{ animation: 'trophy-bounce 1s ease-in-out infinite' }}>
-                                🏆
+                                <i className="fi fi-br-trophy ui-icon text-[4.25rem]" aria-hidden="true"></i>
                             </div>
                             <h2 className="text-4xl sm:text-5xl font-black mb-2" style={{ fontFamily: 'Outfit, sans-serif' }}>
                                 <span className="text-[#25343F]">YOU WIN!</span>
@@ -75,12 +74,14 @@ export default function GameOver() {
                             {isDcWin ? (
                                 <p className="text-[#4A5A65]">Your opponent disconnected</p>
                             ) : (
-                                <p className="text-[#4A5A65]">Congratulations! You got BINGO! 🎉</p>
+                                <p className="text-[#4A5A65]">Congratulations! You got BINGO!</p>
                             )}
                         </>
                     ) : (
                         <>
-                            <div className="text-7xl mb-4">😔</div>
+                            <div className="text-7xl mb-4">
+                                <i className="fi fi-br-sad ui-icon text-[4.25rem]" aria-hidden="true"></i>
+                            </div>
                             <h2 className="text-4xl sm:text-5xl font-black mb-2" style={{ fontFamily: 'Outfit, sans-serif' }}>
                                 <span className="text-[#25343F]">
                                     YOU LOSE
@@ -106,7 +107,10 @@ export default function GameOver() {
 
                 {/* Play Again */}
                 <button onClick={handlePlayAgain} className="btn-primary w-full py-3 sm:py-4 text-base sm:text-lg">
-                    🎮 Play Again
+                    <span className="inline-flex items-center justify-center gap-2">
+                        <i className="fi fi-br-gamepad ui-icon" aria-hidden="true"></i>
+                        <span>Play Again</span>
+                    </span>
                 </button>
             </div>
         </div>

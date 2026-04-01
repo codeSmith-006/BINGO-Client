@@ -200,10 +200,16 @@ export default function BoardSetup({ emit }) {
                     {!state.myReady && (
                         <div className="grid grid-cols-2 gap-3">
                             <button onClick={handleAutoFill} className="btn-secondary flex-1 text-sm py-2">
-                                🎲 Auto-Fill
+                                <span className="inline-flex items-center justify-center gap-2">
+                                    <i className="fi fi-br-dice ui-icon" aria-hidden="true"></i>
+                                    <span>Auto-Fill</span>
+                                </span>
                             </button>
                             <button onClick={handleClear} className="btn-secondary flex-1 text-sm py-2">
-                                🗑️ Clear
+                                <span className="inline-flex items-center justify-center gap-2">
+                                    <i className="fi fi-br-circle-trash ui-icon" aria-hidden="true"></i>
+                                    <span>Clear</span>
+                                </span>
                             </button>
                         </div>
                     )}
@@ -214,7 +220,10 @@ export default function BoardSetup({ emit }) {
                             disabled={!allPlaced}
                             className="btn-success w-full py-3 text-base sm:text-lg"
                         >
-                            ✓ Ready
+                            <span className="inline-flex items-center justify-center gap-2">
+                                <i className="fi fi-br-check ui-icon" aria-hidden="true"></i>
+                                <span>Ready</span>
+                            </span>
                         </button>
                     )}
 
@@ -224,7 +233,10 @@ export default function BoardSetup({ emit }) {
                             disabled={!state.allReady}
                             className="btn-primary w-full py-3 text-base sm:text-lg animate-pulse-glow"
                         >
-                            {state.allReady ? '🚀 Start Game' : '⏳ Waiting for opponent...'}
+                            <span className="inline-flex items-center justify-center gap-2">
+                                <i className={`fi ${state.allReady ? 'fi-br-rocket-lunch' : 'fi-br-clock'} ui-icon`} aria-hidden="true"></i>
+                                <span>{state.allReady ? 'Start Game' : 'Waiting for opponent...'}</span>
+                            </span>
                         </button>
                     )}
 

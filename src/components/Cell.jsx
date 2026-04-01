@@ -3,7 +3,7 @@
  * Handles display for both setup and gameplay phases.
  */
 export default function Cell({ number, isMarked, onClick, disabled, variant = 'game' }) {
-    const baseClass = 'bingo-cell';
+    const baseClass = `bingo-cell ${variant === 'game' ? 'game-cell' : 'setup-cell'}`;
 
     let variantClass = '';
     if (variant === 'setup-empty') {
