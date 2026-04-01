@@ -14,11 +14,15 @@ let socketInstance = null;
 function getSocket() {
   if (!socketInstance) {
     socketInstance = io(SOCKET_URL, {
-      transports: ['websocket', 'polling'],
+      // Start with polling so hosts like Render can complete the initial
+      // handshake before upgrading to WebSocket.
+      transports: ['polling', 'websocket'],
+      tryAllTransports: true,
       autoConnect: true,
       reconnection: true,
       reconnectionAttempts: 10,
       reconnectionDelay: 1000,
+      timeout: 20000,
     });
   }
   return socketInstance;
@@ -45,7 +49,10 @@ export function useSocket() {
 
     const onConnectError = (err) => {
       console.error('Connection error:', err.message);
-      dispatch({ type: 'SET_ERROR', error: 'Failed to connect to server' });
+      dispatch({
+        type: 'SET_ERROR',
+        error: 'Failed to connect to server. If the backend is on Render, wait a few seconds and try again.',
+      });
     };
 
     const onPlayerJoined = ({ roomState }) => {
