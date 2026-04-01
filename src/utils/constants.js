@@ -1,6 +1,6 @@
 const rawSocketUrl = import.meta.env.VITE_SOCKET_URL?.trim();
 
-export const SOCKET_URL = rawSocketUrl || "https://bingo-xi-brown.vercel.app";
+export const SOCKET_URL = "https://bingo-ygd8.onrender.com";
 
 export const PHASES = {
   LOBBY: "lobby",
