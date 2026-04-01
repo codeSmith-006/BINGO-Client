@@ -6,6 +6,7 @@ import { useState, useCallback } from 'react';
 import { useGameState, useGameDispatch } from '../context/GameContext';
 import Cell from './Cell';
 import { GRID_SIZE, TOTAL_NUMBERS } from '../utils/constants';
+import { bannerClass, cardClass, iconClass, primaryButtonClass, secondaryButtonClass, statusOnlineClass, statusWaitingClass, successButtonClass } from '../utils/uiClasses';
 
 export default function BoardSetup({ emit }) {
     const state = useGameState();
@@ -124,7 +125,7 @@ export default function BoardSetup({ emit }) {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-5">
-            <div className="glass-card p-5 sm:p-8 max-w-xl w-full animate-fade-in">
+            <div className={`${cardClass} w-full max-w-xl p-5 sm:p-8`}>
                 {/* Header */}
                 <div className="text-center mb-6 sm:mb-7">
                     <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-[#25343F]" style={{ fontFamily: 'Outfit, sans-serif' }}>
@@ -145,7 +146,7 @@ export default function BoardSetup({ emit }) {
                 {/* Player status */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5 px-1">
                     <div className="flex items-center gap-2">
-                        <span className={`status-dot ${state.myReady ? 'online' : 'waiting'}`}></span>
+                        <span className={state.myReady ? statusOnlineClass : statusWaitingClass}></span>
                         <span className="text-sm text-[#25343F]">
                             You {state.myReady ? '— Ready!' : '— Setting up'}
                         </span>
@@ -155,7 +156,7 @@ export default function BoardSetup({ emit }) {
                             Opponent {state.allReady ? '— Ready!' :
                                 state.players.length > 1 ? '— Setting up' : '— Not here'}
                         </span>
-                        <span className={`status-dot ${state.allReady ? 'online' : 'waiting'}`}></span>
+                        <span className={state.allReady ? statusOnlineClass : statusWaitingClass}></span>
                     </div>
                 </div>
 
@@ -184,7 +185,7 @@ export default function BoardSetup({ emit }) {
                             {Array.from({ length: TOTAL_NUMBERS }, (_, i) => i + 1).map(num => (
                                 <button
                                     key={num}
-                                    className={`number-chip ${usedNumbers.has(num) ? 'used' : ''} ${selectedNumber === num ? 'selected' : ''}`}
+                                    className={`flex h-[2.4rem] w-[2.4rem] items-center justify-center rounded-[0.7rem] border-[1.5px] border-[#25343F] bg-[#EAEFEF] text-[0.8rem] font-bold text-[#25343F] shadow-[1px_1px_0_#25343F] transition sm:h-[2.6rem] sm:w-[2.6rem] sm:text-sm ${usedNumbers.has(num) ? 'cursor-not-allowed opacity-35 shadow-none' : 'hover:-translate-x-px hover:-translate-y-px hover:bg-[#BFC9D1]'} ${selectedNumber === num ? 'bg-[#FF9B51]' : ''}`}
                                     onClick={() => handleNumberSelect(num)}
                                     disabled={usedNumbers.has(num)}
                                 >
@@ -199,15 +200,15 @@ export default function BoardSetup({ emit }) {
                 <div className="flex flex-col gap-4">
                     {!state.myReady && (
                         <div className="grid grid-cols-2 gap-3">
-                            <button onClick={handleAutoFill} className="btn-secondary flex-1 text-sm py-2">
+                            <button onClick={handleAutoFill} className={`${secondaryButtonClass} flex-1 py-2 text-sm`}>
                                 <span className="inline-flex items-center justify-center gap-2">
-                                    <i className="fi fi-br-dice ui-icon" aria-hidden="true"></i>
+                                    <i className={`fi fi-br-dice ${iconClass}`} aria-hidden="true"></i>
                                     <span>Auto-Fill</span>
                                 </span>
                             </button>
-                            <button onClick={handleClear} className="btn-secondary flex-1 text-sm py-2">
+                            <button onClick={handleClear} className={`${secondaryButtonClass} flex-1 py-2 text-sm`}>
                                 <span className="inline-flex items-center justify-center gap-2">
-                                    <i className="fi fi-br-circle-trash ui-icon" aria-hidden="true"></i>
+                                    <i className={`fi fi-br-circle-trash ${iconClass}`} aria-hidden="true"></i>
                                     <span>Clear</span>
                                 </span>
                             </button>
@@ -218,10 +219,10 @@ export default function BoardSetup({ emit }) {
                         <button
                             onClick={handleReady}
                             disabled={!allPlaced}
-                            className="btn-success w-full py-3 text-base sm:text-lg"
+                            className={`${successButtonClass} py-3 text-base sm:text-lg`}
                         >
                             <span className="inline-flex items-center justify-center gap-2">
-                                <i className="fi fi-br-check ui-icon" aria-hidden="true"></i>
+                                <i className={`fi fi-br-check ${iconClass}`} aria-hidden="true"></i>
                                 <span>Ready</span>
                             </span>
                         </button>
@@ -231,18 +232,18 @@ export default function BoardSetup({ emit }) {
                         <button
                             onClick={handleStartGame}
                             disabled={!state.allReady}
-                            className="btn-primary w-full py-3 text-base sm:text-lg animate-pulse-glow"
+                            className={`${primaryButtonClass} py-3 text-base sm:text-lg ${!state.allReady ? 'animate-pulse' : ''}`}
                         >
                             <span className="inline-flex items-center justify-center gap-2">
-                                <i className={`fi ${state.allReady ? 'fi-br-rocket-lunch' : 'fi-br-clock'} ui-icon`} aria-hidden="true"></i>
+                                <i className={`fi ${state.allReady ? 'fi-br-rocket-lunch' : 'fi-br-clock'} ${iconClass}`} aria-hidden="true"></i>
                                 <span>{state.allReady ? 'Start Game' : 'Waiting for opponent...'}</span>
                             </span>
                         </button>
                     )}
 
                     {state.myReady && state.role === 'joiner' && (
-                        <div className="retro-banner text-center py-3 px-4 text-[#25343F]">
-                            <span className="status-dot waiting mr-2"></span>
+                        <div className={`${bannerClass} text-center py-3 px-4 text-[#25343F]`}>
+                            <span className={`${statusWaitingClass} mr-2`}></span>
                             Waiting for host to start the game...
                         </div>
                     )}

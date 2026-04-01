@@ -3,6 +3,7 @@
  * Each letter lights up when a line is completed.
  */
 import { BINGO_LETTERS } from '../utils/constants';
+import { bingoLetterActiveClass, bingoLetterBaseClass } from '../utils/uiClasses';
 
 export default function BingoHeader({ lineCount = 0, label = '' }) {
     return (
@@ -16,7 +17,7 @@ export default function BingoHeader({ lineCount = 0, label = '' }) {
                 {BINGO_LETTERS.map((letter, index) => (
                     <span
                         key={letter}
-                        className={`bingo-letter ${index < lineCount ? 'active' : ''}`}
+                        className={`${bingoLetterBaseClass} ${index < lineCount ? bingoLetterActiveClass : ''}`}
                     >
                         {letter}
                     </span>

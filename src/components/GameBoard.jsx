@@ -7,6 +7,7 @@ import { useCallback } from 'react';
 import { useGameState, useGameDispatch } from '../context/GameContext';
 import Cell from './Cell';
 import BingoHeader from './BingoHeader';
+import { cardClass, dividerClass, iconClass } from '../utils/uiClasses';
 
 export default function GameBoard({ emit }) {
     const state = useGameState();
@@ -36,15 +37,15 @@ export default function GameBoard({ emit }) {
         <div className="min-h-screen flex flex-col items-center justify-center p-3 sm:p-4">
             {/* Disconnect banner */}
             {state.opponentDisconnected && (
-                <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl bg-[#FF9B51] border-2 border-[#25343F] text-[#25343F] text-sm font-bold animate-fade-in">
+                <div className="fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-xl border-2 border-[#25343F] bg-[#FF9B51] px-5 py-3 text-sm font-bold text-[#25343F]">
                     <span className="inline-flex items-center gap-2">
-                        <i className="fi fi-br-triangle-warning ui-icon" aria-hidden="true"></i>
+                        <i className={`fi fi-br-triangle-warning ${iconClass}`} aria-hidden="true"></i>
                         <span>Opponent disconnected — waiting for reconnect...</span>
                     </span>
                 </div>
             )}
 
-            <div className="glass-card p-4 sm:p-6 max-w-lg w-full animate-fade-in">
+            <div className={`${cardClass} w-full max-w-lg p-4 sm:p-6`}>
                 {/* Room info */}
                 <div className="text-center mb-4">
                     <span className="text-xs text-[#6F7F89] uppercase tracking-[0.2em]">
@@ -60,7 +61,7 @@ export default function GameBoard({ emit }) {
                 </div>
 
                 {/* Separator */}
-                <div className="retro-divider mb-5"></div>
+                <div className={`${dividerClass} mb-5`}></div>
 
                 {/* Score summary */}
                 <div className="flex justify-between items-center mb-4 px-1">
@@ -86,7 +87,7 @@ export default function GameBoard({ emit }) {
 
                 {/* 5×5 Game Board */}
                 {state.board && (
-                    <div className="game-board grid grid-cols-5 gap-2 sm:gap-2.5 mx-auto">
+                    <div className="mx-auto grid w-full max-w-[16.25rem] grid-cols-5 gap-2 sm:max-w-[19rem] sm:gap-2.5">
                         {state.board.map((row, rowIndex) =>
                             row.map((num, colIndex) => (
                                 <Cell

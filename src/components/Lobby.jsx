@@ -3,6 +3,19 @@
  */
 import { useState, useEffect } from 'react';
 import { useGameState, useGameDispatch } from '../context/GameContext';
+import {
+    cardClass,
+    dividerClass,
+    iconClass,
+    inputClass,
+    instructionParagraphClass,
+    modalCardClass,
+    modalCloseClass,
+    modalOverlayClass,
+    primaryButtonClass,
+    secondaryButtonClass,
+    statusWaitingClass,
+} from '../utils/uiClasses';
 
 const instructions = {
     bn: {
@@ -101,7 +114,7 @@ export default function Lobby({ emit }) {
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 sm:p-5">
-            <div className="glass-card p-6 sm:p-9 max-w-lg w-[93%] animate-fade-in">
+            <div className={`${cardClass} w-[93%] max-w-lg p-6 sm:p-9`}>
                 {/* Title */}
                 <div className="text-center mb-8 sm:mb-10">
                     <h1 className="text-4xl sm:text-6xl font-black tracking-[0.12em] mb-2 text-[#25343F]" style={{ fontFamily: 'Outfit, sans-serif' }}>
@@ -114,17 +127,17 @@ export default function Lobby({ emit }) {
 
                 {/* Error message */}
                 {state.error && (
-                    <div className="mb-5 p-3 rounded-xl bg-[#FF9B51] text-[#25343F] text-sm text-center animate-fade-in border-2 border-[#25343F]">
+                    <div className="mb-5 rounded-xl border-2 border-[#25343F] bg-[#FF9B51] p-3 text-center text-sm text-[#25343F]">
                         {state.error}
                     </div>
                 )}
 
                 {/* Waiting for opponent (host has created room) */}
                 {waiting && state.roomId && (
-                    <div className="animate-slide-up">
+                    <div>
                         <div className="text-center mb-5">
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#BFC9D1] border-2 border-[#25343F] mb-4">
-                                <span className="status-dot waiting"></span>
+                                <span className={statusWaitingClass}></span>
                                 <span className="text-[#25343F] text-sm font-bold">Waiting for opponent...</span>
                             </div>
                         </div>
@@ -138,8 +151,8 @@ export default function Lobby({ emit }) {
                             </div>
                         </div>
 
-                        <button onClick={copyInviteLink} className="btn-secondary w-full flex items-center justify-center gap-2">
-                            <i className={`fi ${copied ? 'fi-br-check' : 'fi-br-copy'} ui-icon`} aria-hidden="true"></i>
+                        <button onClick={copyInviteLink} className={secondaryButtonClass}>
+                            <i className={`fi ${copied ? 'fi-br-check' : 'fi-br-copy'} ${iconClass}`} aria-hidden="true"></i>
                             {copied ? 'Share this link to your friend!' : 'Copy Invite Link'}
                         </button>
                     </div>
@@ -148,15 +161,15 @@ export default function Lobby({ emit }) {
                 {/* Initial lobby buttons */}
                 {!waiting && (
                     <div className="space-y-5">
-                        <button onClick={handleHostGame} className="btn-primary w-full text-base sm:text-lg py-3 sm:py-4 flex items-center justify-center gap-3">
-                            <i className="fi fi-br-plus ui-icon" aria-hidden="true"></i>
+                        <button onClick={handleHostGame} className={`${primaryButtonClass} text-base sm:text-lg`}>
+                            <i className={`fi fi-br-plus ${iconClass}`} aria-hidden="true"></i>
                             Host Game
                         </button>
 
                         <div className="flex items-center gap-4 my-6">
-                            <div className="flex-1 retro-divider"></div>
+                            <div className={`flex-1 ${dividerClass}`}></div>
                             <span className="text-[#6F7F89] text-xs uppercase tracking-[0.2em]">or</span>
-                            <div className="flex-1 retro-divider"></div>
+                            <div className={`flex-1 ${dividerClass}`}></div>
                         </div>
 
                         <div className="space-y-4">
@@ -166,20 +179,20 @@ export default function Lobby({ emit }) {
                                 value={joinRoomId}
                                 onChange={e => setJoinRoomId(e.target.value.toUpperCase())}
                                 onKeyDown={e => e.key === 'Enter' && handleJoinGame()}
-                                className="form-input"
+                                className={inputClass}
                                 maxLength={8}
                             />
-                            <button onClick={handleJoinGame} className="btn-secondary w-full text-base sm:text-lg py-3 flex items-center justify-center gap-3">
-                                <i className="fi fi-br-enter ui-icon" aria-hidden="true"></i>
+                            <button onClick={handleJoinGame} className={`${secondaryButtonClass} text-base sm:text-lg`}>
+                                <i className={`fi fi-br-enter ${iconClass}`} aria-hidden="true"></i>
                                 Join Game
                             </button>
                         </div>
 
                         <button
                             onClick={() => setShowInstructions(true)}
-                            className="btn-secondary w-full text-sm sm:text-base py-3 flex items-center justify-center gap-3"
+                            className={`${secondaryButtonClass} text-sm sm:text-base`}
                         >
-                            <i className="fi fi-br-book-open-cover ui-icon" aria-hidden="true"></i>
+                            <i className={`fi fi-br-book-open-cover ${iconClass}`} aria-hidden="true"></i>
                             How To Play
                         </button>
                     </div>
@@ -187,15 +200,15 @@ export default function Lobby({ emit }) {
             </div>
 
             {showInstructions && (
-                <div className="modal-overlay" onClick={() => setShowInstructions(false)}>
+                <div className={modalOverlayClass} onClick={() => setShowInstructions(false)}>
                     <div
-                        className="modal-card animate-slide-up"
+                        className={modalCardClass}
                         onClick={(event) => event.stopPropagation()}
                     >
                         <div className="flex items-start justify-between gap-3 mb-5">
                             <div>
                                 <div className="flex items-center gap-3">
-                                    <i className="fi fi-br-book-open-cover ui-icon text-[1.4rem] sm:text-[1.6rem]" aria-hidden="true"></i>
+                                    <i className={`fi fi-br-book-open-cover ${iconClass} text-[1.4rem] sm:text-[1.6rem]`} aria-hidden="true"></i>
                                     <h2
                                         className="text-2xl sm:text-3xl font-black text-[#25343F]"
                                         style={{ fontFamily: 'Outfit, sans-serif' }}
@@ -209,25 +222,25 @@ export default function Lobby({ emit }) {
                             </div>
                             <button
                                 onClick={() => setShowInstructions(false)}
-                                className="modal-close"
+                                className={modalCloseClass}
                                 aria-label="Close instructions"
                             >
-                                <i className="fi fi-br-cross-small ui-icon" aria-hidden="true"></i>
+                                <i className={`fi fi-br-cross-small ${iconClass}`} aria-hidden="true"></i>
                             </button>
                         </div>
 
                         <div className="flex justify-end mb-4">
                             <button
                                 onClick={() => setInstructionLanguage((lang) => (lang === 'bn' ? 'en' : 'bn'))}
-                                className="btn-secondary text-sm py-2 px-4"
+                                className={`${secondaryButtonClass} w-auto px-4 py-2 text-sm`}
                             >
                                 {currentInstructions.toggle}
                             </button>
                         </div>
 
-                        <div className="instruction-copy">
+                        <div className="flex flex-col gap-3 sm:gap-4">
                             {currentInstructions.body.map((paragraph) => (
-                                <p key={paragraph}>{paragraph}</p>
+                                <p key={paragraph} className={instructionParagraphClass}>{paragraph}</p>
                             ))}
                         </div>
                     </div>

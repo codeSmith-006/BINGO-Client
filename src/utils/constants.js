@@ -1,4 +1,6 @@
-export const SOCKET_URL = 'http://localhost:3001';
+const rawSocketUrl = import.meta.env.VITE_SOCKET_URL?.trim();
+
+export const SOCKET_URL = rawSocketUrl || 'http://localhost:3001';
 
 export const PHASES = {
   LOBBY: 'lobby',
