@@ -1,6 +1,6 @@
 const rawSocketUrl = import.meta.env.VITE_SOCKET_URL?.trim();
 
-export const SOCKET_URL = rawSocketUrl || 'http://localhost:3001';
+export const SOCKET_URL = rawSocketUrl || 'https://bingo-ygd8.onrender.com';
 
 export const PHASES = {
   LOBBY: 'lobby',
