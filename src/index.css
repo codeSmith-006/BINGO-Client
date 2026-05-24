@@ -1,2 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
+
+@keyframes bingo-line-grow {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.1);
+  }
+
+  65% {
+    opacity: 1;
+    transform: scaleX(1.05);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes bingo-line-grow-vertical {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.1);
+  }
+
+  65% {
+    opacity: 1;
+    transform: scaleY(1.05);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+.bingo-line-animate-row {
+  animation: bingo-line-grow 650ms ease-out;
+  transform-origin: center;
+}
+
+.bingo-line-animate-col {
+  animation-name: bingo-line-grow-vertical;
+  animation-duration: 650ms;
+  animation-timing-function: ease-out;
+  transform-origin: center;
+}
